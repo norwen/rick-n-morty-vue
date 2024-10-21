@@ -4,7 +4,6 @@ import characterEmpty from '@/assets/character-empty.png'
 defineProps({
   url: {
     type: String,
-    default: characterEmpty,
   },
   altText: {
     type: String,
@@ -18,16 +17,17 @@ defineProps({
 </script>
 
 <template>
-  <div class="character-container">
-    <div v-if="isLoading" class="loader">Loading</div>
-    <img v-else :src="url" :alt="altText" />
+  <div
+    class="w-56 h-56 rounded overflow-hidden shadow-[0_0_34px_rgba(0,0,0,0.0915)]"
+  >
+    <div v-if="isLoading" class="w-full h-full">Loading</div>
+    <img
+      v-else
+      :src="url || characterEmpty"
+      :alt="altText"
+      class="w-full h-full"
+    />
   </div>
 </template>
 
-<style scoped>
-.character-container {
-  width: 14rem;
-  height: 14rem;
-  box-shadow: 0 0 34px 0 rgba(0, 0, 0, 0.0915);
-}
-</style>
+<style scoped></style>
