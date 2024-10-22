@@ -1,5 +1,6 @@
 <script setup>
 import characterEmpty from '@/assets/character-empty.png'
+import IconSpinner from '@/icons/IconSpinner.vue'
 
 defineProps({
   url: {
@@ -20,14 +21,32 @@ defineProps({
   <div
     class="w-56 h-56 rounded overflow-hidden shadow-[0_0_34px_rgba(0,0,0,0.0915)]"
   >
-    <div v-if="isLoading" class="w-full h-full">Loading</div>
-    <img
-      v-else
-      :src="url || characterEmpty"
-      :alt="altText"
-      class="w-full h-full"
-    />
+    <transition name="fade">
+      <div
+        v-if="isLoading"
+        key="loading"
+        class="w-full h-full flex items-center justify-center"
+      >
+        <IconSpinner />
+      </div>
+      <img
+        v-else
+        :src="url || characterEmpty"
+        :alt="altText"
+        class="w-full h-full"
+        key="image"
+      />
+    </transition>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

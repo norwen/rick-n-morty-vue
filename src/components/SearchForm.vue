@@ -22,8 +22,8 @@ function handleSearch() {
   <form @submit.prevent="handleSearch" class="flex w-56 border-b border-black">
     <label for="search" class="sr-only">Search</label>
     <input
-      id="search"
       type="text"
+      class="flex-1"
       v-model="characterId"
       placeholder="Search..."
       aria-label="Search for a Rick and Morty character"
@@ -31,7 +31,7 @@ function handleSearch() {
       pattern="^[1-9]\d*$"
       required
     />
-    <button type="submit" class="hover:opacity-90">Search</button>
+    <button type="submit" class="ml-1 hover:opacity-90">Search</button>
   </form>
 </template>
 

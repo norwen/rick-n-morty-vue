@@ -56,22 +56,20 @@ async function handleCharacterSearch(id) {
 </script>
 
 <template>
-  <main
-    class="container flex flex-col md:flex-row gap-5 justify-start p-4 md:p-8"
-  >
-    <div class="flex flex-col">
-      <SearchForm
-        v-model="characterId"
-        @search="handleCharacterSearch"
-        class="mb-[1.875rem]"
-      />
-      <CharacterImage :url="character.imageUrl" :is-loading="isLoading" />
-    </div>
-    <CharacterDetails
-      v-if="isCharacterPresent && !hasErrors && !isLoading"
-      v-bind="character"
+  <main class="container flex flex-col justify-start p-4 md:py-16">
+    <SearchForm
+      v-model="characterId"
+      @search="handleCharacterSearch"
+      class="mb-[1.875rem]"
     />
-    <div v-if="hasErrors">Character not found</div>
+    <div class="flex flex-col md:flex-row gap-x-7">
+      <CharacterImage :url="character.imageUrl" :is-loading="isLoading" />
+      <CharacterDetails
+        v-if="isCharacterPresent && !hasErrors && !isLoading"
+        v-bind="character"
+      />
+      <div v-if="hasErrors">Character not found</div>
+    </div>
   </main>
 </template>
 
