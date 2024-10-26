@@ -1,5 +1,5 @@
-import { ref, reactive, computed } from 'vue'
-import LocalStorageManager from '@/utils/localStorageHelper.js'
+import { ref, reactive } from 'vue'
+import useLocalStorage from '@/composables/useLocalStorage'
 
 const defaultCharacterState = {
   id: null,
@@ -13,47 +13,44 @@ const defaultCharacterState = {
 }
 
 export function useCharacter() {
-  const character = reactive({ ...defaultCharacterState })
+  const activeCharacter = reactive({ ...defaultCharacterState })
+  const recentCharacters = useLocalStorage([], 'recentCharacters')
   const isLoading = ref(false)
   const errorMessage = ref('')
 
-  const isCharacterPresent = computed(() => !!character.name)
+  function addCharacterToRecent(data) {
+    if (!data || !data.id) return
 
-  function setCharacter(data) {
-    if (!data) {
-      resetCharacter()
+    const existingIndex = recentCharacters.value.findIndex(
+      char => char.id === data.id,
+    )
+    if (existingIndex !== -1) {
+      recentCharacters.value.splice(existingIndex, 1)
+    }
+
+    recentCharacters.value.unshift({
+      id: data.id,
+      name: data.name || '',
+      species: data.species || '',
+      type: data.type || '',
+      location: data.location?.name || '',
+      origin: data.origin?.name || '',
+      status: data.status || '',
+      image: data.image || '',
+    })
+
+    if (recentCharacters.value.length > 5) {
+      recentCharacters.value.pop()
+    }
+  }
+
+  async function getCharacterById(id) {
+    const cachedCharacter = recentCharacters.value.find(char => char.id === id)
+    if (cachedCharacter) {
+      Object.assign(activeCharacter, cachedCharacter)
       return
     }
 
-    const {
-      id = null,
-      name = '',
-      species = '',
-      type = '',
-      location: { name: location = '' } = {},
-      origin: { name: origin = '' } = {},
-      status = '',
-      image: image = '',
-    } = data
-
-    Object.assign(character, {
-      id,
-      name,
-      species,
-      type,
-      location,
-      origin,
-      status,
-      image,
-    })
-  }
-
-  function resetCharacter() {
-    Object.assign(character, defaultCharacterState)
-  }
-
-  async function fetchCharacterById(id) {
-    let characterData = null
     try {
       isLoading.value = true
       const response = await fetch(
@@ -62,24 +59,23 @@ export function useCharacter() {
       if (!response.ok) {
         throw new Error('Character not found')
       }
-      characterData = await response.json()
-      setCharacter(characterData)
-      LocalStorageManager.addToLocalStorageList('characters', characterData)
+      const characterData = await response.json()
+      Object.assign(activeCharacter, characterData)
+      addCharacterToRecent(characterData)
       errorMessage.value = ''
     } catch (error) {
-      errorMessage.value =
-        error instanceof Error ? error.message : 'Error accured'
+      Object.assign(activeCharacter, defaultCharacterState)
+      errorMessage.value = error || 'An error occurred. Please try again'
     } finally {
-      setCharacter(characterData)
       isLoading.value = false
     }
   }
 
   return {
-    character,
+    character: activeCharacter,
+    recentCharacters,
     isLoading,
-    isCharacterPresent,
     errorMessage,
-    fetchCharacterById,
+    getCharacterById,
   }
 }

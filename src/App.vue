@@ -3,20 +3,20 @@ import SearchForm from '@/components/SearchForm.vue'
 import CharacterImage from '@/components/CharacterImage.vue'
 import CharacterDetails from '@/components/CharacterDetails.vue'
 import { useCharacter } from '@/composables/useCharacter'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import RecentCharactersList from '@/components/RecentCharactersList.vue'
 
 const {
   character,
   isLoading,
   errorMessage,
-  isCharacterPresent,
-  fetchCharacterById,
+  getCharacterById,
+  recentCharacters,
 } = useCharacter()
 
 const characterId = ref('')
 async function handleCharacterSearch(id) {
-  await fetchCharacterById(id)
+  await getCharacterById(id)
 }
 </script>
 
@@ -35,13 +35,14 @@ async function handleCharacterSearch(id) {
         class="mb-4"
       />
       <CharacterDetails
-        v-if="isCharacterPresent && !errorMessage && !isLoading"
+        v-if="!!character.id && !errorMessage && !isLoading"
         v-bind="character"
       />
       <div v-if="!!errorMessage" class="text-danger text-2xl font-semibold">
         {{ errorMessage }}
       </div>
       <RecentCharactersList
+        :characters="recentCharacters"
         :active-character-id="character.id"
         class="md:ml-auto order-first md:order-none mb-4"
       />

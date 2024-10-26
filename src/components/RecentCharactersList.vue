@@ -24,15 +24,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import LocalStorageManager from '@/utils/localStorageHelper.js'
 import CharacterImage from '@/components/CharacterImage.vue'
 
 defineProps({
   activeCharacterId: Number,
+  characters: [],
 })
-
-const characters = computed(
-  () => LocalStorageManager.getFromLocalStorage('characters') || [],
-)
 </script>
