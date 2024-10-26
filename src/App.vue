@@ -4,6 +4,7 @@ import CharacterImage from '@/components/CharacterImage.vue'
 import CharacterDetails from '@/components/CharacterDetails.vue'
 import { useCharacter } from '@/composables/useCharacter'
 import { ref } from 'vue'
+import RecentCharactersList from '@/components/RecentCharactersList.vue'
 
 const {
   character,
@@ -27,7 +28,12 @@ async function handleCharacterSearch(id) {
       class="mb-[1.875rem]"
     />
     <div class="flex flex-col md:flex-row gap-x-7">
-      <CharacterImage :url="character.imageUrl" :is-loading="isLoading" />
+      <CharacterImage
+        :url="character.image"
+        :is-loading="isLoading"
+        :alt="character.name"
+        class="mb-4"
+      />
       <CharacterDetails
         v-if="isCharacterPresent && !errorMessage && !isLoading"
         v-bind="character"
@@ -35,6 +41,10 @@ async function handleCharacterSearch(id) {
       <div v-if="!!errorMessage" class="text-danger text-2xl font-semibold">
         {{ errorMessage }}
       </div>
+      <RecentCharactersList
+        :active-character-id="character.id"
+        class="md:ml-auto order-first md:order-none mb-4"
+      />
     </div>
   </main>
 </template>

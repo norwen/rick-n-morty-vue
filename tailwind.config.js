@@ -15,9 +15,8 @@ module.exports = {
         center: true, // Default container settings
         padding: '1rem',
         screens: {
-          sm: '600px',
-          md: '728px',
-          lg: '984px',
+          md: '644px',
+          lg: '856px',
         },
       },
     },

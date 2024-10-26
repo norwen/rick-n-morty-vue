@@ -1,31 +1,59 @@
 import { ref, reactive, computed } from 'vue'
-export function useCharacter() {
-  const character = reactive({
-    name: '',
-    species: '',
-    type: '',
-    location: '',
-    origin: '',
-    status: '',
-    imageUrl: '',
-  })
+import LocalStorageManager from '@/utils/localStorageHelper.js'
 
+const defaultCharacterState = {
+  id: null,
+  name: '',
+  species: '',
+  type: '',
+  location: '',
+  origin: '',
+  status: '',
+  image: '',
+}
+
+export function useCharacter() {
+  const character = reactive({ ...defaultCharacterState })
   const isLoading = ref(false)
   const errorMessage = ref('')
 
   const isCharacterPresent = computed(() => !!character.name)
 
   function setCharacter(data) {
-    character.name = data?.name || ''
-    character.species = data?.name || ''
-    character.type = data?.type || ''
-    character.location = data?.location?.name || ''
-    character.origin = data?.origin?.name || ''
-    character.status = data?.status || ''
-    character.imageUrl = data?.image || ''
+    if (!data) {
+      resetCharacter()
+      return
+    }
+
+    const {
+      id = null,
+      name = '',
+      species = '',
+      type = '',
+      location: { name: location = '' } = {},
+      origin: { name: origin = '' } = {},
+      status = '',
+      image: image = '',
+    } = data
+
+    Object.assign(character, {
+      id,
+      name,
+      species,
+      type,
+      location,
+      origin,
+      status,
+      image,
+    })
+  }
+
+  function resetCharacter() {
+    Object.assign(character, defaultCharacterState)
   }
 
   async function fetchCharacterById(id) {
+    let characterData = null
     try {
       isLoading.value = true
       const response = await fetch(
@@ -34,15 +62,15 @@ export function useCharacter() {
       if (!response.ok) {
         throw new Error('Character not found')
       }
-      setCharacter(await response.json())
+      characterData = await response.json()
+      setCharacter(characterData)
+      LocalStorageManager.addToLocalStorageList('characters', characterData)
       errorMessage.value = ''
     } catch (error) {
-      setCharacter(null)
       errorMessage.value =
-        error.response?.status === 404
-          ? 'Character not found'
-          : 'An error occurred. Please try again'
+        error instanceof Error ? error.message : 'Error accured'
     } finally {
+      setCharacter(characterData)
       isLoading.value = false
     }
   }

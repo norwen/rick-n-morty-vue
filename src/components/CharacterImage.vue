@@ -14,12 +14,20 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  size: {
+    type: String,
+    validator(value) {
+      return ['small', 'base'].includes(value)
+    },
+    default: 'base',
+  },
 })
 </script>
 
 <template>
   <div
-    class="w-56 h-56 rounded overflow-hidden shadow-[0_0_34px_rgba(0,0,0,0.0915)]"
+    :class="`${size === 'small' ? 'h-16 w-16' : 'h-56 w-56 shadow-[0_0_34px_rgba(0,0,0,0.0915)]'}`"
+    class="box-content aspect-square rounded overflow-hidden"
   >
     <transition name="fade">
       <div
@@ -33,7 +41,7 @@ defineProps({
         v-else
         :src="url || characterEmpty"
         :alt="altText"
-        class="w-full h-full"
+        class="w-full h-full rounded"
         key="image"
       />
     </transition>
