@@ -26,7 +26,7 @@ defineProps({
 
 <template>
   <div
-    :class="`${size === 'small' ? 'h-16 w-16' : 'h-56 w-56 shadow-[0_0_34px_rgba(0,0,0,0.0915)]'}`"
+    :class="`${size === 'small' ? 'h-12 w-12 md:h-16 md:w-16' : 'h-56 w-56 shadow-[0_0_34px_rgba(0,0,0,0.0915)]'}`"
     class="box-content aspect-square rounded overflow-hidden"
   >
     <transition name="fade">
@@ -40,7 +40,7 @@ defineProps({
       <img
         v-else
         :src="url || characterEmpty"
-        :alt="altText"
+        :alt="`${altText} Rick and Morty character`"
         class="w-full h-full rounded"
         key="image"
       />

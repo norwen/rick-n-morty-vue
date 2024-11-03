@@ -18,6 +18,12 @@ const characterId = ref('')
 async function handleCharacterSearch(id) {
   await getCharacterById(id)
 }
+
+async function selectCharacter(selectedCharacterId) {
+  characterId.value = selectedCharacterId
+
+  await getCharacterById(selectedCharacterId)
+}
 </script>
 
 <template>
@@ -25,26 +31,33 @@ async function handleCharacterSearch(id) {
     <SearchForm
       v-model="characterId"
       @search="handleCharacterSearch"
-      class="mb-[1.875rem]"
+      class="mb-4 md:mb-6"
     />
-    <div class="flex flex-col md:flex-row gap-x-7">
-      <CharacterImage
-        :url="character.image"
-        :is-loading="isLoading"
-        :alt="character.name"
-        class="mb-4"
-      />
-      <CharacterDetails
-        v-if="!!character.id && !errorMessage && !isLoading"
-        v-bind="character"
-      />
-      <div v-if="!!errorMessage" class="text-danger text-2xl font-semibold">
-        {{ errorMessage }}
+    <div class="flex justify-between">
+      <div class="flex flex-col md:flex-row gap-x-7">
+        <CharacterImage
+          :url="character.image"
+          :is-loading="isLoading"
+          :alt-text="character.name"
+          class="mb-4"
+        />
+        <CharacterDetails
+          v-if="!!character.id && !errorMessage && !isLoading"
+          v-bind="character"
+        />
+        <div
+          v-if="!!errorMessage"
+          role="alert"
+          class="text-danger text-2xl font-semibold"
+        >
+          {{ errorMessage }}
+        </div>
       </div>
       <RecentCharactersList
+        class="md:ml-auto order-first md:order-none mb-4"
         :characters="recentCharacters"
         :active-character-id="character.id"
-        class="md:ml-auto order-first md:order-none mb-4"
+        @selectCharacter="selectCharacter"
       />
     </div>
   </main>

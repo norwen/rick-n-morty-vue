@@ -19,7 +19,12 @@ function handleSearch() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSearch" class="flex w-56 border-b border-black">
+  <form
+    @submit.prevent="handleSearch"
+    role="search"
+    class="flex w-56 border-b border-black"
+    action="#"
+  >
     <label for="search" class="sr-only">Search</label>
     <input
       type="text"

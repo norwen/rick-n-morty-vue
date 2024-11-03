@@ -23,6 +23,12 @@ const characterInfo = computed(() => [
   <div class="character-info">
     <h1 class="text-3xl font-semibold mb-4">{{ name }}</h1>
     <table>
+      <caption class="sr-only">
+        Character details
+        {{
+          name
+        }}
+      </caption>
       <tbody>
         <tr v-for="(item, index) in characterInfo" :key="index">
           <th class="w-20 p-1 text-left font-light text-subtle">

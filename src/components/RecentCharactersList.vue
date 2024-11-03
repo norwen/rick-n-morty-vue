@@ -1,17 +1,20 @@
 <template>
-  <ul role="listbox" class="listbox">
+  <ul role="listbox">
     <li
       v-for="character in characters"
       :key="character.id"
       role="option"
       tabindex="0"
       :aria-selected="activeCharacterId === character.id"
-      class="rounded border-2"
+      class="max-w-fit rounded border-2 cursor-pointer"
       :class="
         activeCharacterId === character.id
           ? 'border-primary'
           : 'border-transparent'
       "
+      @click="selectCharacter(character.id)"
+      @keydown.enter="selectCharacter(character.id)"
+      @keydown.space.prevent="selectCharacter(character.id)"
     >
       <CharacterImage
         :url="character.image"
@@ -30,4 +33,10 @@ defineProps({
   activeCharacterId: Number,
   characters: [],
 })
+
+const emit = defineEmits(['selectCharacter'])
+
+function selectCharacter(characterId) {
+  emit('selectCharacter', characterId)
+}
 </script>
