@@ -5,6 +5,7 @@ import CharacterDetails from '@/components/CharacterDetails.vue'
 import { useCharacter } from '@/composables/useCharacter'
 import { computed, ref } from 'vue'
 import RecentCharactersList from '@/components/RecentCharactersList.vue'
+import debounce from '@/utils/debounceHelper.js'
 
 const {
   character,
@@ -15,22 +16,23 @@ const {
 } = useCharacter()
 
 const characterId = ref('')
-async function handleCharacterSearch(id) {
+
+async function getCharacter(id) {
+  if (characterId.value !== id) {
+    characterId.value = id
+  }
+
   await getCharacterById(id)
 }
 
-async function selectCharacter(selectedCharacterId) {
-  characterId.value = selectedCharacterId
-
-  await getCharacterById(selectedCharacterId)
-}
+const getCharacterDebounced = debounce(getCharacter, 300)
 </script>
 
 <template>
   <main class="container flex flex-col justify-start p-4 md:py-16">
     <SearchForm
       v-model="characterId"
-      @search="handleCharacterSearch"
+      @search="getCharacterDebounced"
       class="mb-4 md:mb-6"
     />
     <div class="flex justify-between">
@@ -57,7 +59,7 @@ async function selectCharacter(selectedCharacterId) {
         class="md:ml-auto order-first md:order-none mb-4"
         :characters="recentCharacters"
         :active-character-id="character.id"
-        @selectCharacter="selectCharacter"
+        @selectCharacter="getCharacterDebounced"
       />
     </div>
   </main>

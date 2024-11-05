@@ -45,14 +45,16 @@ export function useCharacter() {
   }
 
   async function getCharacterById(id) {
+    isLoading.value = true
+
     const cachedCharacter = recentCharacters.value.find(char => char.id === id)
     if (cachedCharacter) {
       Object.assign(activeCharacter, cachedCharacter)
+      isLoading.value = false
       return
     }
 
     try {
-      isLoading.value = true
       const response = await fetch(
         `https://rickandmortyapi.com/api/character/${id}`,
       )
