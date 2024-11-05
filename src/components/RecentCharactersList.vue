@@ -1,7 +1,7 @@
 <template>
   <ul role="listbox">
     <li
-      v-for="character in characters"
+      v-for="(character, index) in characters"
       :key="character.id"
       role="option"
       tabindex="0"

@@ -46,6 +46,7 @@ export function useCharacter() {
 
   async function getCharacterById(id) {
     isLoading.value = true
+    errorMessage.value = ''
 
     const cachedCharacter = recentCharacters.value.find(char => char.id === id)
     if (cachedCharacter) {

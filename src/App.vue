@@ -56,7 +56,7 @@ const getCharacterDebounced = debounce(getCharacter, 300)
         </div>
       </div>
       <RecentCharactersList
-        class="md:ml-auto order-first md:order-none mb-4"
+        class="md:ml-auto md:order-none mb-4"
         :characters="recentCharacters"
         :active-character-id="character.id"
         @selectCharacter="getCharacterDebounced"
