@@ -16,7 +16,11 @@ This is a basic "Fetch 'n' Cache" application built with Vue.js that allows user
 - Allow users to click on a cached character to display it
 - Highlight the selected character in the cached list
 
-## Development and Deployment
+  
+## Deployment
+The application is deployed and available at: https://rick-n-morty-vue.vercel.app/
+
+## Development
 
 ### Installation
 
